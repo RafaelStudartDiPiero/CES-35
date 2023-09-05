@@ -102,6 +102,7 @@ int main(int argc, char **argv)
             response.status_response.position = member.position;
             response.status_response.velocity = member.velocity;
             response.status_response.fuel = member.fuel;
+            // COMMENT THIS WHEN TESTING TIMEOUT OR INACTIVE
             write(s, &response, sizeof(response));
             break;
         }
@@ -115,6 +116,7 @@ int main(int argc, char **argv)
             Response response;
             response.type = Move;
             response.move_response.member_id = member.id;
+            // COMMENT THIS WHEN TESTING TIMEOUT OR INACTIVE
             write(s, &response, sizeof(response));
             member.position = msg.move.position;
             member.velocity = msg.move.velocity;
