@@ -136,11 +136,12 @@ int main(int argc, char *argv[])
 
     sa = accept(s, 0, 0);
     squad_socket = sa;
+    bool loop = true;
 
-    while (1)
+    while (loop)
     {
         char input[BUF_SIZE];
-        printf("Enter command (e.g., 'rollcall', 'status member-id', 'move member-id x y z vx vy vz'): ");
+        printf("Enter command (e.g., 'rollcall', 'status member-id', 'move member-id x y z vx vy vz', 'exit'): ");
         fgets(input, sizeof(input), stdin);
         Message message;
         bool message_sent;
@@ -296,8 +297,25 @@ int main(int argc, char *argv[])
                 message.move.velocity.vy = vy;
                 message.move.velocity.vz = vz;
 
-                write(squad_socket, &message, sizeof(message));
-                message_sent = true;
+                bool member_found = false;
+                for (Member &member : squad)
+                {
+                    if (member.id == member_id)
+                    {
+                        member_found = true;
+                        break;
+                    }
+                }
+
+                if (member_found)
+                {
+                    write(squad_socket, &message, sizeof(message));
+                    message_sent = true;
+                }
+                else
+                {
+                    printf("This member is not in squad. Make a Roll-Call first\n");
+                }
             }
             else
             {
@@ -345,9 +363,15 @@ int main(int argc, char *argv[])
                 }
             }
         }
+        else if (strcmp(input, "exit\n") == 0)
+        {
+            printf("Closing server\n");
+            loop = false;
+        }
         else
         {
-            printf("Invalid command. Use 'rollcall', 'status member-id', or 'move member-id x y z vx vy vz'.\n");
+            printf("Invalid command. Use 'rollcall', 'status member-id', 'move member-id x y z vx vy vz' or 'exit'\n");
         }
+        message_sent = false;
     }
 }

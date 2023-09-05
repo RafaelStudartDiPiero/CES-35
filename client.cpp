@@ -111,7 +111,7 @@ int main(int argc, char **argv)
             printf("Received move from %d.\n", msg.move.leader_id);
 
             // OPTIONAL SLEEP TO TEST TIMEOUT
-            std::this_thread::sleep_for(std::chrono::seconds(WAIT_SECONDS));
+            // std::this_thread::sleep_for(std::chrono::seconds(WAIT_SECONDS));
 
             Response response;
             response.type = Move;
