@@ -61,7 +61,8 @@ int main(int argc, char **argv)
     }
 
     // Listen for messages continuously
-    while (1)
+    bool loop = true;
+    while (loop)
     {
         Message msg;
         int bytes = read(s, &msg, sizeof(Message));
@@ -116,11 +117,15 @@ int main(int argc, char **argv)
             Response response;
             response.type = Move;
             response.move_response.member_id = member.id;
-            // COMMENT THIS WHEN TESTING TIMEOUT OR INACTIVE
-            write(s, &response, sizeof(response));
             member.position = msg.move.position;
             member.velocity = msg.move.velocity;
             member.fuel = member.fuel - 10;
+            if(member.fuel < 0){
+                loop = false;
+                printf("Move consumes more fuel then available. Drone fell.\n");
+            }
+            // COMMENT THIS WHEN TESTING TIMEOUT OR INACTIVE
+            write(s, &response, sizeof(response));
             break;
         }
         default:

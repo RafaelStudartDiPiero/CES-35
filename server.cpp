@@ -190,7 +190,14 @@ int main(int argc, char *argv[])
                     else if (select_result > 0)
                     {
                         Response response;
-                        read(sa, &response, sizeof(Response));
+                        int bytes = read(sa, &response, sizeof(Response));
+                        if (bytes <= 0)
+                        {
+                            // Handle disconnection or error
+                            printf("Client closed the connection or an error occurred. Exiting.\n");
+                            close(s);
+                            exit(0);
+                        }
                         handleResponse(std::ref(response), std::ref(leader), std::ref(squad));
                     }
                 }
@@ -198,7 +205,14 @@ int main(int argc, char *argv[])
                 {
                     // Waiting Response from Member
                     Response response;
-                    read(sa, &response, sizeof(Response));
+                    int bytes = read(sa, &response, sizeof(Response));
+                    if (bytes <= 0)
+                    {
+                        // Handle disconnection or error
+                        printf("Client closed the connection or an error occurred. Exiting.\n");
+                        close(s);
+                        exit(0);
+                    }
                     handleResponse(std::ref(response), std::ref(leader), std::ref(squad));
                 }
                 else
@@ -272,7 +286,14 @@ int main(int argc, char *argv[])
                 {
                     // Waiting Response from Member
                     Response response;
-                    read(sa, &response, sizeof(Response));
+                    int bytes = read(sa, &response, sizeof(Response));
+                    if (bytes <= 0)
+                    {
+                        // Handle disconnection or error
+                        printf("Client closed the connection or an error occurred. Exiting.\n");
+                        close(s);
+                        exit(0);
+                    }
                     handleResponse(std::ref(response), std::ref(leader), std::ref(squad));
                 }
                 else
@@ -354,7 +375,14 @@ int main(int argc, char *argv[])
                 {
                     // Waiting Response from Member
                     Response response;
-                    read(sa, &response, sizeof(Response));
+                    int bytes = read(sa, &response, sizeof(Response));
+                    if (bytes <= 0)
+                    {
+                        // Handle disconnection or error
+                        printf("Client closed the connection or an error occurred. Exiting.\n");
+                        close(s);
+                        exit(0);
+                    }
                     handleResponse(std::ref(response), std::ref(leader), std::ref(squad));
                 }
                 else
